@@ -1,0 +1,36 @@
+{
+    "name": "googlephotos",
+    "version": "1.0.0",
+    "description": "Library to make hitting the Google Photos api",
+    "main": "",
+    "scripts": {
+        "start": "nodemon app.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/tuananhnva3837/google-photos.git"
+    },
+    "keywords": [
+        "google",
+        "photos",
+        "nodejs"
+    ],
+    "author": "tuan anh nva",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.17.1",
+        "fs": "0.0.1-security",
+        "googleapis": "^45.0.0",
+        "node-persist": "^2.1.0",
+        "request": "^2.88.0",
+        "request-promise": "^4.2.2",
+        "winston": "^3.1.0"
+    },
+    "devDependencies": {
+        "nodemon": "^1.19.4"
+    },
+    "bugs": {
+        "url": "https://github.com/tuananhnva3837/google-photos/issues"
+    },
+    "homepage": "https://github.com/tuananhnva3837/google-photos#readme"
+}

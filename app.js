@@ -1,0 +1,80 @@
+'use strict'
+
+const express = require('express');
+const app = express();
+const fs = require('fs');
+const {google} = require('googleapis');
+const request = require('request-promise');
+
+//###### INIT LOGGER ######
+const winston = require('winston');
+const consoleTransport = new winston.transports.Console();
+const logger = winston.createLogger({
+    format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.simple()
+    ),
+    transports:[ consoleTransport ]
+});
+///###### END LOGGER ######
+
+const CONST = require('./config/const');
+
+
+function readFileToken() {
+    let content = fs.readFileSync(CONST.TOKEN_FILE,'utf-8','r+');
+    let cToken;
+    if (content) cToken = JSON.parse(content);
+    else cToken = 404;
+    return cToken;
+}
+var AUTH_TOKEN = readFileToken().access_token;
+
+//################# Google Photos APIs #################
+const GooglePhotosApi = require('./lib/photos_library');
+
+app.get(CONST.STATIC_API+'/albums', async (req, res) => {
+    logger.info('Loading Albums');
+    const data = await GooglePhotosApi.apiGetAlbums(AUTH_TOKEN);
+    if (data.error) {
+        returnError(res, data);
+    } else {
+        res.status(200).send(data);
+    }
+});
+
+//################# Google Photos APIs #################
+
+//################## Google Auth APIs ##################
+const GoogleAuthApi = require('./lib/auth');
+app.get('/auth/google', (req, res) => {
+    let url = GoogleAuthApi.generateUrl(CONST.SCOPES.READ_AND_APPEND);
+    res.redirect(url);
+});
+app.get('/auth/google/callback', function (req, res) {
+    const code = req.query.code
+    if(!code){
+        logger.error('No code provided');
+        return 404;
+    }
+    GoogleAuthApi.setCredentialsToken(code)
+    .then(function(response){
+        fs.writeFile(CONST.TOKEN_FILE, JSON.stringify(response), (err) => {
+            if (err) return logger.error(err);
+            logger.info('Token stored');
+        });
+        res.redirect('/');
+    }).catch(function(e){
+        logger.error(e.message);
+        return 404;
+    });
+});
+//################## Google Auth APIs ##################
+
+app.get('/', (req, res) => {
+    logger.info('Google Photos APIs');
+    res.send('Google Photos APIs');
+});
+app.listen(3000, () => {
+    logger.info('----- LISTEN -----');
+});
