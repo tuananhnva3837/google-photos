@@ -1,5 +1,4 @@
 'use strict'
-
 const express = require('express');
 const app = express();
 const fs = require('fs');
@@ -20,7 +19,6 @@ const logger = winston.createLogger({
 
 const CONST = require('./config/const');
 
-
 function readFileToken() {
     let content = fs.readFileSync(CONST.TOKEN_FILE,'utf-8','r+');
     let cToken;
@@ -36,6 +34,20 @@ const GooglePhotosApi = require('./lib/photos_library');
 app.get(CONST.STATIC_API+'/albums', async (req, res) => {
     logger.info('Loading Albums');
     const data = await GooglePhotosApi.apiGetAlbums(AUTH_TOKEN);
+    if (data.error) {
+        returnError(res, data);
+    } else {
+        res.status(200).send(data);
+    }
+});
+
+app.get(CONST.STATIC_API+'/mediaItems/', async (req, res) => {
+    logger.info('Loading Media Items');
+    let albumId = req.query.albumId;
+    let pageToken = req.query.page;
+    let limit = req.query.limit;
+
+    const data = await GooglePhotosApi.mediaItems(AUTH_TOKEN, albumId, limit, pageToken);
     if (data.error) {
         returnError(res, data);
     } else {
