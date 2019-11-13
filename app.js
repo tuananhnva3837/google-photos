@@ -42,9 +42,20 @@ var AUTH_TOKEN = readFileToken().access_token;
 //################# Google Photos APIs #################
 const GooglePhotosApi = require('./lib/photos_library');
 
-app.get(CONST.STATIC_API+'/album/list', async (req, res) => {
+app.get(CONST.STATIC_API+'/albums/list', async (req, res) => {
     logger.info('Loading album list');
-    const data = await GooglePhotosApi.apiAlbumList(AUTH_TOKEN);
+    const data = await GooglePhotosApi.apiAlbumsList(AUTH_TOKEN);
+    if (data.error) {
+        returnError(res, data);
+    } else {
+        res.status(200).send(data);
+    }
+});
+
+app.get(CONST.STATIC_API+'/albums/get', async (req, res) => {
+    logger.info('Loading album information');
+    let albumId = req.query.albumId;
+    const data = await GooglePhotosApi.apiAlbumsGet(AUTH_TOKEN, albumId);
     if (data.error) {
         returnError(res, data);
     } else {
