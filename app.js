@@ -63,6 +63,18 @@ app.get(CONST.STATIC_API+'/albums/get', async (req, res) => {
     }
 });
 
+app.get(CONST.STATIC_API+'/albums/create', async (req, res) => {
+    logger.info('Create album');
+    let title = req.query.title;
+    let parameters = { "title":title };
+    const data = await GooglePhotosApi.apiAlbumsCreate(AUTH_TOKEN, parameters);
+    if (data.error) {
+        logger.error(data);
+    } else {
+        res.status(200).send(data);
+    }
+});
+
 app.get(CONST.STATIC_API+'/mediaItems/', async (req, res) => {
     logger.info('Loading Media Items');
     let albumId = req.query.albumId;
@@ -81,6 +93,9 @@ app.get(CONST.STATIC_API+'/mediaItems/', async (req, res) => {
 
 //################## Google Auth APIs ##################
 const GoogleAuthApi = require('./lib/auth');
+
+GoogleAuthApi.onRefreshToken();
+
 app.get('/auth/google', (req, res) => {
     let url = GoogleAuthApi.generateUrl(CONST.SCOPES.READ_AND_APPEND);
     res.redirect(url);
@@ -93,10 +108,6 @@ app.get('/auth/google/callback', function (req, res) {
     }
     GoogleAuthApi.setCredentialsToken(code)
     .then(function(response){
-        fs.writeFile(CONST.TOKEN_FILE, JSON.stringify(response), (err) => {
-            if (err) return logger.error(err);
-            logger.info('Token stored');
-        });
         res.redirect('/');
     }).catch(function(e){
         logger.error(e.message);
