@@ -15,6 +15,17 @@ const logger = winston.createLogger({
     ),
     transports:[ consoleTransport ]
 });
+// Enable extensive logging if the DEBUG environment variable is set.
+if (process.env.DEBUG) {
+    logger.level = 'silly';
+    app.use(expressWinston.logger({
+        transports: [consoleTransport],
+        winstonInstance: logger
+    }));
+    require('request-promise').debug = true;
+} else {
+    logger.level = 'verbose';
+}
 ///###### END LOGGER ######
 
 const CONST = require('./config/const');
@@ -31,9 +42,9 @@ var AUTH_TOKEN = readFileToken().access_token;
 //################# Google Photos APIs #################
 const GooglePhotosApi = require('./lib/photos_library');
 
-app.get(CONST.STATIC_API+'/albums', async (req, res) => {
-    logger.info('Loading Albums');
-    const data = await GooglePhotosApi.apiGetAlbums(AUTH_TOKEN);
+app.get(CONST.STATIC_API+'/album/list', async (req, res) => {
+    logger.info('Loading album list');
+    const data = await GooglePhotosApi.apiAlbumList(AUTH_TOKEN);
     if (data.error) {
         returnError(res, data);
     } else {
