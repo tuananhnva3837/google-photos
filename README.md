@@ -46,9 +46,9 @@ You can figure out your client id, secret and redirect url by going to the
 [Google Cloud Console](https://console.developers.google.com/apis/credentials) and navigating to
 APIs -> Credentials.
 
-<p align="center"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeW5uRrB3sLE6JAG-5nSGr_sGVEVvSa4DmtN6M-IetlTG4edJH&s"></p>
+<p align="center"><img width="150" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeW5uRrB3sLE6JAG-5nSGr_sGVEVvSa4DmtN6M-IetlTG4edJH&s"></p>
 
-<p align="center"> MixOne Team </p>
+
 <p align="center"> ------------------------------------------------------- </p>
 <p align="center"> © Anh Duc Software </p>
 <p align="center"> Tuan Anh nVa </p>
