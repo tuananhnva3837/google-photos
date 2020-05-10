@@ -13,8 +13,8 @@ const SITE_API = {
     },
     ALBUM: {
         PHOTOS_TO_LOAD: 150,
-        SEARCH_PAGE_SIZE: 2,  // Số bản ghi 1 trang
-        ALBUM_PAGE_SIZE: 50,    // Kích thước trang để sử dụng cho yêu cầu liệt kê album. 50 được khuyến nghị.
+        SEARCH_PAGE_SIZE: 2,
+        ALBUM_PAGE_SIZE: 50,
         API_END_POINT: 'https://photoslibrary.googleapis.com'
     }
 };
